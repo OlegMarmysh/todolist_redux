@@ -5,6 +5,7 @@ const DELETE_TODO= 'DELETE_TODO';
 const DELETE_TASK = 'DELETE_TASK';
 const SET_TODOLIST = 'SET_TODOLIST';
 const SET_TASKS = 'SET_TASKS';
+const CHANGE_TITLE_TODOLIST = 'CHANGE_TITLE_TODOLIST';
 
 
 const initialState = {
@@ -19,7 +20,7 @@ const reducer = (state=initialState, action) => {
         case ADD_TODO:{
             return {
                 ...state,
-                todoLists: [action.todoList, ...state.todoLists]
+                todoLists: [...state.todoLists, action.todoList]
             }
         }
         case ADD_TASK: {
@@ -101,6 +102,21 @@ const reducer = (state=initialState, action) => {
                 })
             }
         }
+        case CHANGE_TITLE_TODOLIST: {
+            return  {
+                ...state,
+                todoLists: state.todoLists.map(tl => {
+                    if (tl.id === action.todolistId){
+                        return {
+                            ...tl,
+                            title: action.title
+                        }
+                    }else {
+                        return tl
+                    }
+                })
+            }
+        }
         default: return state
     }
     return state;
@@ -112,14 +128,12 @@ export const addTodoAC = (todoList) => {
         todoList
     }
 };
-
 export const deleteTodoAC = (todoListId) => {
     return {
         type: DELETE_TODO,
         todoListId
     }
 };
-
 export const addTaskAC = (todolistId, task) => {
     return {
         type: ADD_TASK,
@@ -127,7 +141,6 @@ export const addTaskAC = (todolistId, task) => {
         task
     }
 };
-
 export const deleteTaskAC = (todoListId, taskId) => {
     return {
         type: DELETE_TASK,
@@ -135,7 +148,6 @@ export const deleteTaskAC = (todoListId, taskId) => {
         taskId
     }
 };
-
 export const changeTaskAC = (todolistId, taskid, obj) => {
     return {
         type: CHANGE_TASK,
@@ -144,14 +156,12 @@ export const changeTaskAC = (todolistId, taskid, obj) => {
         obj
     }
 };
-
 export const setTodoAC = (todoList) => {
     return {
         type: SET_TODOLIST,
         todoList
     }
 };
-
 export const setTasksAC = (todolistId, tasks) => {
     return {
         type: SET_TASKS,
@@ -159,5 +169,12 @@ export const setTasksAC = (todolistId, tasks) => {
         tasks
     }
 };
+export const changeTodoListTitleAC =(todolistId, title) => {
+    return {
+        type: CHANGE_TITLE_TODOLIST,
+        todolistId,
+        title
+    }
+}
 
 export default reducer;
