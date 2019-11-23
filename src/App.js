@@ -3,8 +3,7 @@ import './App.css';
 import TodoList from "./TodoList";
 import AddNewItemForm from "./AddNewItemForm";
 import {connect} from "react-redux";
-import {addTodoAC, deleteTodoAC, setTodoAC} from "./reducer";
-import {api} from "./api";
+import {createTodoList,getTodoList, removeTodoList} from "./reducer";
 
 class App extends React.Component {
 
@@ -16,22 +15,13 @@ class App extends React.Component {
         this.restoreState();
     }
     restoreState = () => {
-        api.createTodoList()
-            .then ((response)=> {
-            this.props.setTodoList(response.data)
-        })
+        this.props.createTodoList()
     };
     addTodoList = (title) => {
-        api.addTodoList(title)
-            .then(response => {
-            this.props.adTodo(response.data.data.item);
-        })
+       this.props.getTodoList(title)
     };
     deleteTodoList = (id) => {
-        api.deleteTodoList(id)
-            .then(response => {
-            this.props.deleteTodo (id)
-        })
+        this.props.removeTodoList(id)
     };
 
     render = () => {
@@ -55,26 +45,9 @@ let mapStateToProps = (state) => {
     return {
         todoLists: state.todoLists
     }
-}
+};
 
-let mapDispatchToProps = (dispatch) => {
-    return {
-        setTodoList: (todoList) => {
-            const action = setTodoAC(todoList);
-            dispatch(action)
-        },
-        adTodo: (todoList) => {
-            const action = addTodoAC(todoList);
-            dispatch(action)
-        },
-        deleteTodo: (todoListId) => {
-            const action = deleteTodoAC(todoListId);
-            dispatch(action)
-        }
-    }
-}
-
-const ConnectedApp = connect(mapStateToProps, mapDispatchToProps)(App);
+const ConnectedApp = connect(mapStateToProps, {createTodoList,removeTodoList,getTodoList})(App);
 
 export default ConnectedApp;
 
